@@ -5,14 +5,21 @@ import requests
 import csv
 import json
 from datetime import datetime
+import dateutil
+import pytz
+
+def time2utc(time):
+    # previously: datetime.now().isoformat()
+    timestamp = time['s']
+    timezone = time['tz']
+    return dateutil.parser.parse("{}{}".format(timestamp, timezone)).astimezone(pytz.utc)
 
 def to_airquality(city_name, lat, lon, response):
     data = response['data']
-
+    date = time2utc(data['time'])
     return {
         'landkreis_name': city_name,
-        # todo time from request
-        'datetime': datetime.now().isoformat(),
+        'datetime': date.strftime('%Y-%m-%dT%H:%M:%S'),
         'lat': lat,
         'lon': lon,
         'airquality': {
@@ -20,7 +27,6 @@ def to_airquality(city_name, lat, lon, response):
             'iaqi': data['iaqi']
         }
     }
-
 
 airquality_token = os.environ['AIR_QUALITY_API_TOKEN']
 bucket = []
@@ -46,7 +52,7 @@ s3_client = boto3.client('s3')
 date = datetime.now()
 
 if len(bucket) > 0:
-    response = s3_client.put_object(Body=json.dumps(bucket), Bucket='sdd-s3-basebucket',
+    response = s3_client.put_object(Body=json.dumps(bucket), Bucket='sdd-s3-bucket',
                                     Key='airquality/{}/{}/{}/{}'.format(str(date.year).zfill(4),
                                                                         str(date.month).zfill(2),
                                                                         str(date.day).zfill(2),
