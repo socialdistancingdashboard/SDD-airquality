@@ -25,7 +25,7 @@ def mappingLankreisNameToKey():
             for row in fileReader:
                 #nuts;ags;bez_nuts;schluessel_ags
                 nuts = row[0]
-                ags = int(row[1])
+                ags = row[1]
                 bez_nuts = row[2]
                 schluessel_ags = row[3]
                 mapping[bez_nuts] = ags
