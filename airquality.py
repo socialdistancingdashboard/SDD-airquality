@@ -14,11 +14,28 @@ def time2utc(time):
     timezone = time['tz']
     return dateutil.parser.parse("{}{}".format(timestamp, timezone)).astimezone(pytz.utc)
 
-def to_airquality(city_name, lat, lon, response):
+def mappingLankreisNameToKey():
+    mapping = {}
+    with open('schluessel_nuts_ags_kreise.csv', newline='', encoding='utf-8') as csvfile:
+        fileReader = csv.reader(csvfile, delimiter=';', quotechar='|')
+        header = next(fileReader)
+        # Check file as empty
+        if header is not None:
+            # Iterate over each row after the header in the csv
+            for row in fileReader:
+                #nuts;ags;bez_nuts;schluessel_ags
+                nuts = row[0]
+                ags = int(row[1])
+                bez_nuts = row[2]
+                schluessel_ags = row[3]
+                mapping[bez_nuts] = ags
+    return mapping
+
+def to_airquality(ags, lat, lon, response):
     data = response['data']
     date = time2utc(data['time'])
     return {
-        'landkreis_name': city_name,
+        'ags': ags,
         'datetime': date.strftime('%Y-%m-%dT%H:%M:%S'),
         'lat': lat,
         'lon': lon,
@@ -30,6 +47,7 @@ def to_airquality(city_name, lat, lon, response):
 
 airquality_token = os.environ['AIR_QUALITY_API_TOKEN']
 bucket = []
+mapping = mappingLankreisNameToKey()
 
 with open('kreise_mit_center.csv', newline='', encoding='utf-8') as csvfile:
     fileReader = csv.reader(csvfile, delimiter=',', quotechar='|')
@@ -44,7 +62,7 @@ with open('kreise_mit_center.csv', newline='', encoding='utf-8') as csvfile:
             url = f'https://api.waqi.info/feed/geo:{lat};{lon}/?token={airquality_token}'
             response = requests.get(url)
             if response.status_code == 200 and response.json()['status'] == 'ok':
-                airquality_record = to_airquality(city_name, lat, lon, response.json())
+                airquality_record = to_airquality(mapping[city_name], lat, lon, response.json())
                 # print(str(airquality_record).encode('utf-8'))
                 bucket.append(airquality_record)
 
