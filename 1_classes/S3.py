@@ -1,7 +1,6 @@
 from datetime import datetime
 import boto3
 import json
-import pandas as pd
 
 class S3_Handler:
     def __init__(self, bucketName="sdd-s3-bucket"):
