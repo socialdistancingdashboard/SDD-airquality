@@ -1,8 +1,8 @@
 import csv
 
-def mappingLankreisNameToKey():
+def mappingLankreisNameToKey(basePath="./"):
     mapping = {}
-    with open('0_config/schluessel_nuts_ags_kreise.csv', newline='', encoding='utf-8') as csvfile:
+    with open(basePath+'0_config/schluessel_nuts_ags_kreise.csv', newline='', encoding='utf-8') as csvfile:
         fileReader = csv.reader(csvfile, delimiter=';', quotechar='|')
         header = next(fileReader)
         # Check file as empty

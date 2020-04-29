@@ -43,18 +43,19 @@ class AirQuality:
 
 class AirQualityReader:
     """ Reader for AirQuality datasource """
-    def __init__(self, apiToken=""):
+    def __init__(self, apiToken="", basePath="./"):
         """ Constructor with API-token """
+        self.basePath = basePath
         self.airQualityApiToken = apiToken
         self.resetBucket()
-        self.mapping = MappingLandkreis.mappingLankreisNameToKey()
+        self.mapping = MappingLandkreis.mappingLankreisNameToKey(self.basePath)
     def resetBucket(self):
         """ Empty bucket """
         self.bucket = []
     def readConfig(self, filename):
         """ Read the configuration with the list of cities to collect """
         self.cities = []
-        with open(filename, newline='', encoding='utf-8') as csvfile:
+        with open(self.basePath+filename, newline='', encoding='utf-8') as csvfile:
             fileReader = csv.reader(csvfile, delimiter=',', quotechar='"')
             header = next(fileReader)
             # Check file as empty
