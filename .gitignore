@@ -1,0 +1,8 @@
+# credentials
+0_config/credentials
+
+# ignore Python module cache
+1_classes/__pycache__/
+
+#checks for tests
+test_result/
