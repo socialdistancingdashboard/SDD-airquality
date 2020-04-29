@@ -2,8 +2,8 @@ import sys
 import os
 sys.path.insert(0,"1_classes/")
 
-import AirQuality
-import S3
+from 1_classes import AirQuality
+from 1_classes import S3
 
 reader = AirQuality.AirQualityReader(apiToken=os.environ['AIR_QUALITY_API_TOKEN'])
 reader.readConfig('0_config/kreise_mit_center.csv')
