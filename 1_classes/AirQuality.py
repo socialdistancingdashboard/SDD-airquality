@@ -36,9 +36,9 @@ class AirQuality:
             except:
                 print(f"No name for lat: {self.lat} lon: {self.lon}")
             try:
-                self.orgin = data['city']["url"]
+                self.origin = data['city']["url"]
             except:
-                print(f"No orgin for lat: {self.lat} lon: {self.lon}")
+                print(f"No origin for lat: {self.lat} lon: {self.lon}")
             try:
                 self.time = data['time']["iso"]
             except:
@@ -56,7 +56,7 @@ class AirQuality:
             'lat': self.lat,
             'lon': self.lon,
             'name': self.name,
-            'orgin': self.orgin,
+            'origin': self.origin,
             '_id': self._id,
             'airquality': {
                 'aqi': self.aqi,
