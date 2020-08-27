@@ -15,11 +15,13 @@ class AirQuality:
         self.lat = latitude
         self.lon = longitude
         self.date = datetime.now()
-        self._id = None
-        self.name = None
-        self.orgin = None
+        self._id = "None"
+        self.name = "None"
+        self.orgin = "None"
         self.aqi = "-"
         self.iaqi = "-"
+        self.time = "None"
+
     def setData(self, token):
         """ Get the data through the API with the API-token """
         url = f'https://api.waqi.info/feed/geo:{self.lat};{self.lon}/?token={token}'
